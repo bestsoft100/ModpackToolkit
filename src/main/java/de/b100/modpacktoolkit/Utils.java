@@ -1,4 +1,4 @@
-package de.b100.modpacktoolkit.hungertweaks;
+package de.b100.modpacktoolkit;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,6 +15,10 @@ public class Utils {
 	
 	public static String loadFile(File file) {
 		return read(file);
+	}
+	
+	public static String loadFile(InputStream inputStream) {
+		return read(inputStream);
 	}
 	
 	private static String read(Object object) {
@@ -84,6 +88,40 @@ public class Utils {
 				throw new RuntimeException();
 			}
 		}
+	}
+	
+	public static String getFileExtension(File file) {
+		return getFileExtension(file.getAbsolutePath());
+	}
+	
+	public static String getFileExtension(String path) {
+		String ext = "";
+		char[] ca = path.toCharArray();
+		boolean a = false;
+		
+		for(int i=0; i < ca.length; i++) {
+			ext += ca[i];
+			
+			if(ca[i] == '/' || ca[i] == '\\') {
+				a = false;
+			}
+			if(ca[i] == '.') {
+				a = true;
+				ext = "";
+			}
+			
+		}
+		
+		return a ? ext : null;
+	}
+	
+	public static String getFilenameWithoutExtension(File file) {
+		return getFilenameWithoutExtension(file.getName());
+	}
+	
+	public static String getFilenameWithoutExtension(String filename) {
+		String ext = getFileExtension(filename);
+		return filename.substring(0, filename.length() - ext.length() - 1);
 	}
 
 }

@@ -11,6 +11,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import de.b100.modpacktoolkit.ModpackToolkitMod;
+import de.b100.modpacktoolkit.Utils;
 import net.minecraft.world.World;
 
 public abstract class Generator {
