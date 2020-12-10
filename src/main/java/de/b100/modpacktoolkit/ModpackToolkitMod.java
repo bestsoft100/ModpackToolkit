@@ -22,10 +22,12 @@ public class ModpackToolkitMod {
 	public static Gson gson = new Gson();
 
 	public static File configFolder;
+	public static File modConfigFolder;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		configFolder = event.getModConfigurationDirectory();
+		modConfigFolder = new File(configFolder, "ModpackToolkit");
 		
 		CustomWorldGenMod.preInit();
 		HungerTweaks.preInit();
@@ -34,6 +36,7 @@ public class ModpackToolkitMod {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		CustomWorldGenMod.init();
+		HungerTweaks.init();
 	}
 	
 	@EventHandler

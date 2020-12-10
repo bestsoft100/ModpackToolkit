@@ -55,7 +55,7 @@ public abstract class HungerTweaks {
 
 	}
 
-	public void init() {
+	public static void init() {
 		if (developerMode) {
 			defaultFoodValues = new ArrayList<>();
 
