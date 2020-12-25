@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import de.b100.modpacktoolkit.ModpackToolkit;
 import de.b100.modpacktoolkit.Utils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -30,7 +31,8 @@ public class HungerTweaksCommand extends CommandBase{
 		if(args.length > 0) {
 			if(args[0].equalsIgnoreCase("reload")) {
 				
-				HungerTweaks.loadConfig();
+				HungerTweaksMod hungerTweaks = (HungerTweaksMod) ModpackToolkit.hungerTweaksMod;
+				hungerTweaks.loadConfig();
 				
 				try{
 					new FoodValueLoader();
@@ -83,7 +85,7 @@ public class HungerTweaksCommand extends CommandBase{
 					first = false;
 				}
 				
-				Utils.saveFile(new File(HungerTweaks.modConfigFolder, "allFoodItems.txt"), itemStr);
+				Utils.saveFile(new File(ModpackToolkit.hungerTweaksMod.getModConfigFolder(), "allFoodItems.txt"), itemStr);
 				sender.sendMessage(new TextComponentString("Done!"));
 			}
 		}

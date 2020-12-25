@@ -10,7 +10,7 @@ import java.util.Set;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import de.b100.modpacktoolkit.ModpackToolkitMod;
+import de.b100.modpacktoolkit.ModpackToolkit;
 import de.b100.modpacktoolkit.Utils;
 import net.minecraft.world.World;
 
@@ -28,14 +28,22 @@ public abstract class Generator {
 	
 	public abstract void generate(Random random, int chunkX, int chunkZ, World world);
 	
-	public static List<Generator> loadGenerators(){
+	public static List<Generator> loadGenerators(File worldGenConfigFolder){
 		System.out.println("Loading Generators...");
-		File generatorsFolder = new File(CustomWorldGenMod.modConfigFolder, "generators");
+		File generatorsFolder = new File(worldGenConfigFolder, "generators");
+		if(!generatorsFolder.exists()) {
+			generatorsFolder.mkdirs();
+			return null;
+		}
 		
 		List<Generator> generators = new ArrayList<Generator>();
+		File[] files = generatorsFolder.listFiles();
+		if(files == null || files.length == 0) {
+			return null;
+		}
 		
-		for(File file : generatorsFolder.listFiles()) {
-			JsonObject json = ModpackToolkitMod.gson.fromJson(Utils.loadFile(file), JsonObject.class);
+		for(File file : files) {
+			JsonObject json = ModpackToolkit.gson.fromJson(Utils.loadFile(file), JsonObject.class);
 			
 			Set<Entry<String, JsonElement>> generatorSet = json.entrySet();
 			

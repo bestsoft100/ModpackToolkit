@@ -1,7 +1,6 @@
 package de.b100.modpacktoolkit.hungertweaks;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -10,36 +9,29 @@ import de.b100.modpacktoolkit.ModpackToolkitMod;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-public abstract class HungerTweaks {
-	public static File modConfigFolder;
-	public static File configFile;
+public class HungerTweaksMod extends ModpackToolkitMod{
+	
+	public File configFile;
 
-	private static Configuration config;
+	private Configuration config;
 
 	public static boolean developerMode;
-
 	public static float defaultHungerModifier;
 	public static float defaultSaturationModifier;
 
 	public static List<FoodValue> defaultFoodValues;
 
-	public static void preInit() {
-		modConfigFolder = new File(ModpackToolkitMod.configFolder, "hungertweaks");
-		configFile = new File(modConfigFolder, "hungertweaks.cfg");
+	public void preInit() {
+		configFile = new File(getModConfigFolder(), "hungertweaks.cfg");
 
 		loadConfig();
 	}
 
-	public static void loadConfig() {
+	public void loadConfig() {
 		config = new Configuration(configFile);
 
 		if (!developerMode) {
@@ -55,7 +47,7 @@ public abstract class HungerTweaks {
 
 	}
 
-	public static void init() {
+	public void init() {
 		if (developerMode) {
 			defaultFoodValues = new ArrayList<>();
 
@@ -74,7 +66,7 @@ public abstract class HungerTweaks {
 		new FoodValueLoader();
 	}
 
-	public static void serverStart(FMLServerStartingEvent e) {
+	public void serverStart(FMLServerStartingEvent e) {
 		if (developerMode) {
 			e.registerServerCommand(new HungerTweaksCommand());
 		}
@@ -98,5 +90,9 @@ public abstract class HungerTweaks {
 
 	public static String testMethod() {
 		return "defaultText";
+	}
+
+	public String getName() {
+		return "HungerTweaks";
 	}
 }

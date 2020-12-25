@@ -44,15 +44,19 @@ public class BiomeGroup {
 		return biomes;
 	}
 	
-	public static List<BiomeGroup> loadBiomeGroups(){
+	public static List<BiomeGroup> loadBiomeGroups(File worldGenConfigFolder){
 		List<BiomeGroup> biomeGroups = new ArrayList<>();
 		
-		File biomeGroupFolder = new File(CustomWorldGenMod.modConfigFolder, "biomeGroups");
-		if(!(biomeGroupFolder.exists() && biomeGroupFolder.isDirectory())) {
-			return biomeGroups;
+		File biomeGroupFolder = new File(worldGenConfigFolder, "biomeGroups");
+		if(!biomeGroupFolder.exists()) {
+			biomeGroupFolder.mkdirs();
+			return null;
 		}
 		
 		File[] files = biomeGroupFolder.listFiles();
+		
+		if(files == null || files.length == 0)return null;
+		
 		for(File biomeGroupFile : files) {
 			BiomeGroup biomeGroup = new BiomeGroup(Utils.getFilenameWithoutExtension(biomeGroupFile));
 			biomeGroups.add(biomeGroup);

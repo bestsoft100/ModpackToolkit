@@ -18,6 +18,10 @@ public class WorldGenerator implements IWorldGenerator{
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator,
 			IChunkProvider chunkProvider) {
 		
+		if(generators == null) {
+			return;
+		}
+		
 		for(Generator generator : generators) {
 			generator.generate(random, chunkX, chunkZ, world);
 		}

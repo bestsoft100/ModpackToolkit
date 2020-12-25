@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import de.b100.modpacktoolkit.ModpackToolkit;
 import de.b100.modpacktoolkit.Utils;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
@@ -19,7 +20,7 @@ public class FoodValueLoader {
 	private List<FoodValue> loadedFoodValues;
 	
 	public FoodValueLoader() {
-		foodValuesFile = new File(HungerTweaks.modConfigFolder, "foodValues.txt");
+		foodValuesFile = new File(ModpackToolkit.hungerTweaksMod.getModConfigFolder(), "foodValues.txt");
 		
 		if(!foodValuesFile.exists()) {
 			Utils.createFile(foodValuesFile);
@@ -39,14 +40,14 @@ public class FoodValueLoader {
 				
 				
 				if(foodValue == null) {
-					if(!HungerTweaks.developerMode) {
-						foodValue = new FoodValue(itemFood, (int)(itemFood.getHealAmount(new ItemStack(itemFood)) * HungerTweaks.defaultHungerModifier),
-								itemFood.getSaturationModifier(new ItemStack(itemFood)) * HungerTweaks.defaultSaturationModifier);
+					if(!HungerTweaksMod.developerMode) {
+						foodValue = new FoodValue(itemFood, (int)(itemFood.getHealAmount(new ItemStack(itemFood)) * HungerTweaksMod.defaultHungerModifier),
+								itemFood.getSaturationModifier(new ItemStack(itemFood)) * HungerTweaksMod.defaultSaturationModifier);
 					}else {
-						FoodValue defaultFoodValue = getFoodValueForItem(HungerTweaks.defaultFoodValues, itemFood);
+						FoodValue defaultFoodValue = getFoodValueForItem(HungerTweaksMod.defaultFoodValues, itemFood);
 						
-						foodValue = new FoodValue(itemFood, (int)(defaultFoodValue.getFood() * HungerTweaks.defaultHungerModifier),
-								defaultFoodValue.getSaturation() * HungerTweaks.defaultSaturationModifier);
+						foodValue = new FoodValue(itemFood, (int)(defaultFoodValue.getFood() * HungerTweaksMod.defaultHungerModifier),
+								defaultFoodValue.getSaturation() * HungerTweaksMod.defaultSaturationModifier);
 					}
 				}
 				

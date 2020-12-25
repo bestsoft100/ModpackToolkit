@@ -1,24 +1,17 @@
 package de.b100.modpacktoolkit.customworldgen;
 
-import java.io.File;
-
 import de.b100.modpacktoolkit.ModpackToolkitMod;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public abstract class CustomWorldGenMod {
+public class CustomWorldGenMod extends ModpackToolkitMod{
 	
-	public static File modConfigFolder;
-	
-	public static void preInit() {
-		modConfigFolder = new File(ModpackToolkitMod.configFolder, "CustomWorldGen");
+	public void init() {
+		WorldGenerator.biomeGroups = BiomeGroup.loadBiomeGroups(getModConfigFolder());
+		WorldGenerator.generators = Generator.loadGenerators(getModConfigFolder());
 		
-		WorldGenerator.instance = new WorldGenerator();
-		GameRegistry.registerWorldGenerator(WorldGenerator.instance, 1);
 	}
 	
-	public static void init() {
-		WorldGenerator.biomeGroups = BiomeGroup.loadBiomeGroups();
-		WorldGenerator.generators = Generator.loadGenerators();
+	public String getName() {
+		return "CustomWorldGen";
 	}
 
 }

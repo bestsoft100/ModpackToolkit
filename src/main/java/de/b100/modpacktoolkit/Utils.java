@@ -6,6 +6,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Utils {
 	
@@ -123,5 +126,47 @@ public class Utils {
 		String ext = getFileExtension(filename);
 		return filename.substring(0, filename.length() - ext.length() - 1);
 	}
-
+	
+	public static String clipWhitespace(String string) {
+		int startIndex = 0;
+		int endIndex = string.length();
+		for(int i=0; i < string.length(); i++) {
+			if(!isWhitespace(string.charAt(i))) {
+				startIndex = i;
+				break;
+			}
+		}
+		for(int i = string.length() - 1; i >= startIndex; i--) {
+			if(!isWhitespace(string.charAt(i))) {
+				endIndex = i+1;
+				break;
+			}
+		}
+		return string.substring(startIndex, endIndex);
+	}
+	
+	public static boolean isWhitespace(char c) {
+		return c == ' ' || c == '\t' || c == '\n';
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static List getAllObjects(Class<?> clazz, Class type, Object object, boolean throwException){
+		List list = new ArrayList<>();
+		
+		Field[] fields = clazz.getDeclaredFields();
+		for(Field field : fields) {
+			if(field.getType() == type) {
+				Object obj;
+				try {
+					obj = field.get(object);
+					
+					list.add(obj);
+				} catch (Exception e) {
+					if(throwException)throw new RuntimeException(e);
+				}
+			}
+		}
+		
+		return list;
+	}
 }
