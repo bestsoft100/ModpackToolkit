@@ -10,6 +10,7 @@ import de.b100.modpacktoolkit.Utils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.server.MinecraftServer;
@@ -24,23 +25,26 @@ public class HungerTweaksCommand extends CommandBase{
 	}
 
 	public String getUsage(ICommandSender sender) {
-		return "reload";
+		return "reload printfood sethunger";
 	}
 
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		if(args.length > 0) {
 			if(args[0].equalsIgnoreCase("reload")) {
-				
-				HungerTweaksMod hungerTweaks = (HungerTweaksMod) ModpackToolkit.hungerTweaksMod;
-				hungerTweaks.loadConfig();
-				
-				try{
-					new FoodValueLoader();
+				if(HungerTweaksMod.developerMode) {
+					HungerTweaksMod hungerTweaks = (HungerTweaksMod) ModpackToolkit.hungerTweaksMod;
+					hungerTweaks.loadConfig();
 					
-					sender.sendMessage(new TextComponentString("Reloaded!"));
-				}catch (Exception e) {
-					sender.sendMessage(new TextComponentString("Error! See log for more information."));
-					e.printStackTrace();
+					try{
+						new FoodValueLoader();
+						
+						sender.sendMessage(new TextComponentString("Reloaded!"));
+					}catch (Exception e) {
+						sender.sendMessage(new TextComponentString("Error! See log for more information."));
+						e.printStackTrace();
+					}
+				}else {
+					sendMessage(sender, "To use this command enable developer mode and restart the game");
 				}
 			}
 			if(args[0].equalsIgnoreCase("printfood")) {
@@ -88,6 +92,26 @@ public class HungerTweaksCommand extends CommandBase{
 				Utils.saveFile(new File(ModpackToolkit.hungerTweaksMod.getModConfigFolder(), "allFoodItems.txt"), itemStr);
 				sender.sendMessage(new TextComponentString("Done!"));
 			}
+			if(args[0].equalsIgnoreCase("sethunger")) {
+				if(args.length == 1) {
+					sendMessage(sender, "sethunger [hunger] <saturation>");
+				}
+				if(sender instanceof EntityPlayer) {
+					EntityPlayer player = (EntityPlayer) sender;
+					try {
+						int hunger = Integer.parseInt(args[1]);
+						player.getFoodStats().setFoodLevel(hunger);
+						if(args.length > 2) {
+							float saturation = Float.parseFloat(args[2]);
+							player.getFoodStats().setFoodSaturationLevel(saturation);
+						}
+					}catch (Exception e) {
+						sendMessage(sender, "Invalid value!");
+					}
+				}else {
+					sendMessage(sender, "Must be used by a player");
+				}
+			}
 		}
 	}
 	
@@ -111,6 +135,10 @@ public class HungerTweaksCommand extends CommandBase{
 		}
 		
 		return list;
+	}
+	
+	public void sendMessage(ICommandSender sender, String msg) {
+		sender.sendMessage(new TextComponentString(msg));
 	}
 
 }

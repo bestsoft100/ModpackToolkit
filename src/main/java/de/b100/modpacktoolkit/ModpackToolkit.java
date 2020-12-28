@@ -3,11 +3,14 @@ package de.b100.modpacktoolkit;
 import java.io.File;
 import java.util.List;
 
+import org.apache.logging.log4j.Logger;
+
 import com.google.gson.Gson;
 
 import de.b100.modpacktoolkit.customworldgen.CustomWorldGenMod;
 import de.b100.modpacktoolkit.hungertweaks.HungerTweaksMod;
 import de.b100.modpacktoolkit.startinv.StarterInventoryMod;
+import de.b100.modpacktoolkit.tweaks.TweaksMod;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -30,15 +33,21 @@ public class ModpackToolkit {
 	public static ModpackToolkitMod starterInventoryMod;
 	public static ModpackToolkitMod hungerTweaksMod;
 	public static ModpackToolkitMod customWorldGenMod;
+	public static ModpackToolkitMod tweaksMod;
+	
+	public static Logger logger;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		logger = event.getModLog();
+		
 		configFolder = event.getModConfigurationDirectory();
 		modConfigFolder = new File(configFolder, "ModpackToolkit");
 		
 		starterInventoryMod = new StarterInventoryMod();
 		hungerTweaksMod = new HungerTweaksMod();
 		customWorldGenMod = new CustomWorldGenMod();
+		tweaksMod = new TweaksMod();
 		
 		getMods().forEach(mod -> mod.preInit());
 	}

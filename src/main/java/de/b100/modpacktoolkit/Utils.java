@@ -8,9 +8,41 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.IBlockState;
+
 public class Utils {
+	
+	public static IBlockState setValue(IBlockState state, IProperty<?> property, Object value) {
+		Collection<?> a = property.getAllowedValues();
+		
+		for(int i=0; i < a.size(); i++) {
+			state = state.cycleProperty(property);
+			
+			if(state.getValue(property).equals(value)) {
+				return state;
+			}
+		}
+		throw new RuntimeException("Invalid Value: ["+value+"]("+value.getClass().getName()+") for Property: "+property.getName()+" in Block: "+state.getBlock().getClass().getName()+", allowed Values: ["+toString(a)+"]");
+	}
+	
+	public static String toString(Collection<?> a) {
+		return toString(a.toArray());
+	}
+	
+	public static String toString(Object[] array) {
+		String string = "";
+		
+		for(int i=0; i < array.length; i++) {
+			if(i != 0)string += ",";
+			string += "("+array[i]+")["+array[i].getClass().getName()+"]";
+		}
+		
+		return string;
+	}
 	
 	public static String loadFile(String path) {
 		return loadFile(new File(path));
@@ -168,5 +200,23 @@ public class Utils {
 		}
 		
 		return list;
+	}
+	
+	public static double mix(double a, double b, double c) {
+		return (1-c) * a + c * b;
+	}
+	
+	public static Field findField(Class<?> clazz, String...strings) {
+		Field[] fields = clazz.getDeclaredFields();
+		
+		for(Field field : fields) {
+			for(String string : strings) {
+				if(field.getName().equals(string)) {
+					return field;
+				}
+			}
+		}
+		
+		return null;
 	}
 }
