@@ -5,8 +5,9 @@ import java.util.List;
 import blusunrize.immersiveengineering.common.blocks.plant.BlockIECrop;
 import blusunrize.immersiveengineering.common.items.ItemIESeed;
 import de.b100.modpacktoolkit.Utils;
+import de.b100.modpacktoolkit.tweaks.easyharvest.croptype.AbstractCropType;
 import de.b100.modpacktoolkit.tweaks.easyharvest.croptype.CropTypeImmersiveEngineering;
-import de.b100.modpacktoolkit.tweaks.easyharvest.croptype.ICropType;
+import de.b100.modpacktoolkit.tweaks.easyharvest.utils.BlockInfo;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -22,11 +23,11 @@ public class ImmersiveEngineeringModule extends Module{
 		return item instanceof ItemIESeed;
 	}
 
-	public void getTypes(List<ICropType> cropTypes) {
+	public void getTypes(List<AbstractCropType> cropTypes) {
 		cropTypes.add(new CropTypeImmersiveEngineering(this));
 	}
 	
-	public void harvest(NonNullList<ItemStack> items, ICropType cropType, World world, BlockPos pos) {
+	public void harvest(NonNullList<ItemStack> items, AbstractCropType cropType, World world, BlockPos pos) {
 		IBlockState state = world.getBlockState(pos);
 		
 		if(state.getBlock() instanceof BlockIECrop) {
@@ -47,21 +48,21 @@ public class ImmersiveEngineeringModule extends Module{
 		}
 	}
 	
-	public static void harvestPlant(NonNullList<ItemStack> items, ICropType cropType, World world, BlockPos pos) {
+	public static void harvestPlant(NonNullList<ItemStack> items, AbstractCropType cropType, World world, BlockPos pos) {
 		IBlockState state = world.getBlockState(pos);
 		Block block = state.getBlock();
 		
 		BlockPos posUp = pos.up();
 		IBlockState stateUp = world.getBlockState(posUp);
 		
-		state.getBlock().getDrops(items, world, pos, state, 0);
+		cropType.getDrops(items, new BlockInfo(state, pos, world));
 		
 		if(cropType.isAtMaxValue(stateUp)) {
-			stateUp.getBlock().getDrops(items, world, posUp, stateUp, 0);
+			cropType.getDrops(items, new BlockInfo(stateUp, posUp, world));
 			world.setBlockState(posUp, Blocks.AIR.getDefaultState());
 		}
 		
-		world.setBlockState(pos, Utils.setValue(state, cropType.getProperty(block), cropType.getMinValue(block)));
+		world.setBlockState(pos, Utils.setValue(state, cropType.getAgeProperty(block), cropType.getMinValue(block)));
 	}
-
+	
 }

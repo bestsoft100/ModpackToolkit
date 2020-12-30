@@ -10,6 +10,7 @@ import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.monster.EntityEndermite;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class TweaksEvents {
@@ -41,6 +42,13 @@ public class TweaksEvents {
 	public void onRightClick(PlayerInteractEvent.RightClickBlock event) {
 		if(TweaksMod.easyHarvest) {
 			EasyHarvest.onRightClick(event);
+		}
+	}
+	
+	@SubscribeEvent
+	public void onBlockBreak(BlockEvent.HarvestDropsEvent event) {
+		if(TweaksMod.easyHarvest) {
+			EasyHarvest.onBlockBreak(event);
 		}
 	}
 	
